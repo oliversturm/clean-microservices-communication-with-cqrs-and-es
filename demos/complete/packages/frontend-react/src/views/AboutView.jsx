@@ -7,7 +7,7 @@ const AboutView = () => {
         About This Demo
       </div>
       <div className="py-8 font-bold text-2xl text-center">
-        The One Day Fullstack Demo Application
+        The CQRS/Event Sourcing Demo Application
         <br />
         (React Version)
       </div>

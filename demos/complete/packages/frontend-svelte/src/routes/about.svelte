@@ -3,7 +3,7 @@
     About This Demo
   </div>
   <div class="py-8 font-bold text-2xl text-center">
-    The One Day Fullstack Demo Application<br />(Svelte Version)
+    The CQRS/Event Sourcing Demo Application<br />(Svelte Version)
   </div>
   <div class="px-2 py-1 border-t-2 text-xs text-right">
     &copy; Oliver Sturm, License: MIT
