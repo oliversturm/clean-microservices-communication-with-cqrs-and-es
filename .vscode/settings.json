@@ -10,5 +10,28 @@
     "demos/complete/packages/readmodel-orders",
     "demos/complete/packages/frontend-react",
     "demos/complete/packages/frontend-svelte"
-  ]
+  ],
+  "workbench.colorCustomizations": {
+    "activityBar.activeBackground": "#b6d78f",
+    "activityBar.background": "#b6d78f",
+    "activityBar.foreground": "#15202b",
+    "activityBar.inactiveForeground": "#15202b99",
+    "activityBarBadge.background": "#5b94c4",
+    "activityBarBadge.foreground": "#15202b",
+    "commandCenter.border": "#15202b99",
+    "panel.border": "#b6d78f",
+    "sash.hoverBorder": "#b6d78f",
+    "sideBar.border": "#b6d78f",
+    "statusBar.background": "#9dca69",
+    "statusBar.foreground": "#15202b",
+    "statusBarItem.hoverBackground": "#84bd43",
+    "statusBarItem.remoteBackground": "#9dca69",
+    "statusBarItem.remoteForeground": "#15202b",
+    "tab.activeBorder": "#b6d78f",
+    "titleBar.activeBackground": "#9dca69",
+    "titleBar.activeForeground": "#15202b",
+    "titleBar.inactiveBackground": "#9dca6999",
+    "titleBar.inactiveForeground": "#15202b99"
+  },
+  "peacock.color": "#9dca69"
 }
