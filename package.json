@@ -53,8 +53,7 @@
     "typescript": "4.6.4"
   },
   "scripts": {
-    "start": "pm2 start pm2.config.cjs",
-    "start:localmongo": "pm2 start pm2.localmongo.config.cjs",
+    "start": "pm2-runtime pm2.config.cjs",
     "pm2": "pm2",
     "pm2-stop": "pm2 stop all",
     "http": "node demos/complete/packages/fullstack-demo-http-client/index.js"
