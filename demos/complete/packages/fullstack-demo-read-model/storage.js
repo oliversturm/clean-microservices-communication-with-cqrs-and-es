@@ -14,6 +14,11 @@ const wrapCalls = (dbContext, names) =>
     {}
   );
 
+// This is meant to decide whether strings have been configured
+// for the environment variables -- empty strings are valid,
+// but "undefined" is not.
+const allStrings = arr => arr.every(v => typeof v === 'string');
+
 const createStore = () => {
   // 1. Consider a complete URL in
   //    process.env.STORE_MONGODB_URL
@@ -22,17 +27,34 @@ const createStore = () => {
   //    are available, put together the URL like
   //    SCHEME://USER:PWD@SERVER/PATH
   // 3. Fall back to 'mongodb://127.0.0.1:27017'
-  const url = process.env.STORE_MONGODB_URL
-    ? process.env.STORE_MONGODB_URL
-    : process.env.STORE_MONGODB_USER &&
-      process.env.STORE_MONGODB_PWD &&
-      process.env.STORE_MONGODB_URL_SCHEME &&
-      process.env.STORE_MONGODB_SERVER &&
-      process.env.STORE_MONGODB_URL_PATH
-    ? `${process.env.STORE_MONGODB_URL_SCHEME}://${process.env.STORE_MONGODB_USER}:${process.env.STORE_MONGODB_PWD}@${process.env.STORE_MONGODB_SERVER}/${process.env.STORE_MONGODB_URL_PATH}`
+
+  const {
+    STORE_MONGODB_URL,
+    STORE_MONGODB_USER,
+    STORE_MONGODB_PWD,
+    STORE_MONGODB_URL_SCHEME,
+    STORE_MONGODB_SERVER,
+    STORE_MONGODB_URL_PATH,
+    STORE_DATABASE,
+  } = process.env;
+
+  const url = STORE_MONGODB_URL
+    ? STORE_MONGODB_URL
+    : allStrings([
+        STORE_MONGODB_USER,
+        STORE_MONGODB_PWD,
+        STORE_MONGODB_URL_SCHEME,
+        STORE_MONGODB_SERVER,
+        STORE_MONGODB_URL_PATH,
+      ])
+    ? `${STORE_MONGODB_URL_SCHEME}://${
+        STORE_MONGODB_USER ? `${STORE_MONGODB_USER}:${STORE_MONGODB_PWD}@` : ''
+      }${STORE_MONGODB_SERVER}${
+        STORE_MONGODB_URL_PATH ? `/${STORE_MONGODB_URL_PATH}` : ''
+      }`
     : 'mongodb://127.0.0.1:27017';
 
-  const database = process.env.STORE_DATABASE || 'readmodel';
+  const database = STORE_DATABASE || 'readmodel';
 
   return MongoClient.connect(url, {
     useNewUrlParser: true,

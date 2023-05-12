@@ -28,6 +28,11 @@ const replay = dbContext => cmdProcContext =>
       ])
     );
 
+// This is meant to decide whether strings have been configured
+// for the environment variables -- empty strings are valid,
+// but "undefined" is not.
+const allStrings = arr => arr.every(v => typeof v === 'string');
+
 const createEventStore = () => {
   // 1. Consider a complete URL in
   //    process.env.EVENT_STORE_MONGODB_URL
@@ -36,24 +41,43 @@ const createEventStore = () => {
   //    are available, put together the URL like
   //    SCHEME://USER:PWD@SERVER/PATH
   // 3. Fall back to 'mongodb://127.0.0.1:27017'
-  const url = process.env.EVENT_STORE_MONGODB_URL
-    ? process.env.EVENT_STORE_MONGODB_URL
-    : process.env.EVENT_STORE_MONGODB_USER &&
-      process.env.EVENT_STORE_MONGODB_PWD &&
-      process.env.EVENT_STORE_MONGODB_URL_SCHEME &&
-      process.env.EVENT_STORE_MONGODB_SERVER &&
-      process.env.EVENT_STORE_MONGODB_URL_PATH
-    ? `${process.env.EVENT_STORE_MONGODB_URL_SCHEME}://${process.env.EVENT_STORE_MONGODB_USER}:${process.env.EVENT_STORE_MONGODB_PWD}@${process.env.EVENT_STORE_MONGODB_SERVER}/${process.env.EVENT_STORE_MONGODB_URL_PATH}`
+  const {
+    EVENT_STORE_MONGODB_URL,
+    EVENT_STORE_MONGODB_USER,
+    EVENT_STORE_MONGODB_PWD,
+    EVENT_STORE_MONGODB_URL_SCHEME,
+    EVENT_STORE_MONGODB_SERVER,
+    EVENT_STORE_MONGODB_URL_PATH,
+    EVENT_STORE_DATABASE,
+    EVENT_STORE_COLLECTION,
+  } = process.env;
+
+  const url = EVENT_STORE_MONGODB_URL
+    ? EVENT_STORE_MONGODB_URL
+    : allStrings([
+        EVENT_STORE_MONGODB_USER,
+        EVENT_STORE_MONGODB_PWD,
+        EVENT_STORE_MONGODB_URL_SCHEME,
+        EVENT_STORE_MONGODB_SERVER,
+        EVENT_STORE_MONGODB_URL_PATH,
+      ])
+    ? `${EVENT_STORE_MONGODB_URL_SCHEME}://${
+        EVENT_STORE_MONGODB_USER
+          ? `${EVENT_STORE_MONGODB_USER}:${EVENT_STORE_MONGODB_PWD}@`
+          : ''
+      }${EVENT_STORE_MONGODB_SERVER}${
+        EVENT_STORE_MONGODB_URL_PATH ? `/${EVENT_STORE_MONGODB_URL_PATH}` : ''
+      }`
     : 'mongodb://127.0.0.1:27017';
 
   // Keep location separate for logging, so that the password
   // doesn't get into the log.
-  const logLocation = process.env.EVENT_STORE_MONGODB_USER
-    ? process.env.EVENT_STORE_MONGODB_SERVER
+  const logLocation = EVENT_STORE_MONGODB_USER
+    ? EVENT_STORE_MONGODB_SERVER
     : url;
 
-  const database = process.env.EVENT_STORE_DATABASE || 'events';
-  const collection = process.env.EVENT_STORE_COLLECTION || 'events';
+  const database = EVENT_STORE_DATABASE || 'events';
+  const collection = EVENT_STORE_COLLECTION || 'events';
 
   return MongoClient.connect(url, {
     useNewUrlParser: true,
