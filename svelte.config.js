@@ -34,6 +34,7 @@ const config = {
       cacheDir: `node_modules/.vite-svelte-${CACHE_POSTFIX}`,
       server: {
         port: 3010,
+        host: '0.0.0.0',
       },
     },
   },
